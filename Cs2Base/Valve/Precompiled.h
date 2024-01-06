@@ -9,6 +9,15 @@
 #include "Offsets.h"
 #include "Vector.h"
 #include "Memory.h"
+
+namespace interfaces {
+	Memory mem = Memory("cs2.exe");
+	uintptr_t client = mem.GetModuleAddress("client.dll");
+	uintptr_t entity_list = mem.Read<uintptr_t>(client + offsets::client::dwEntityList);
+	ViewMatrix_t vm = mem.Read<ViewMatrix_t>(client + offsets::client::dwViewMatrix);
+}
+
+
 #include "CPlayer.h"
 
 

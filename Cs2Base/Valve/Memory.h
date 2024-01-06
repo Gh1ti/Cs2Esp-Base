@@ -86,4 +86,9 @@ public:
 		return processId1;
 	}
 
+	bool IsMainWindow() {
+		HWND window = FindWindow(nullptr, "Counter-Strike 2"); //change the window name (im too lazy to make a proper implementation)
+		return GetForegroundWindow() == window;
+	}
+
 };

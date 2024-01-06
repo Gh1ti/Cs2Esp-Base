@@ -129,10 +129,6 @@ INT APIENTRY WinMain(HINSTANCE hInstance , HINSTANCE prevInstance,PSTR pStr ,int
 	ImGui_ImplWin32_Init(window);
 	ImGui_ImplDX11_Init(device, deviceContext);
 	
-	Memory mem = Memory("cs2.exe");
-	uintptr_t client = mem.GetModuleAddress("client.dll");
-
-
 	bool running = true;
 	
 	while (running) {
@@ -141,7 +137,7 @@ INT APIENTRY WinMain(HINSTANCE hInstance , HINSTANCE prevInstance,PSTR pStr ,int
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 
-			if (msg.message == WM_QUIT || mem.GetProcessId() == 0) {
+			if (msg.message == WM_QUIT || interfaces::mem.GetProcessId() == 0) {
 				running = false;
 			}
 			if (!running)
@@ -153,35 +149,42 @@ INT APIENTRY WinMain(HINSTANCE hInstance , HINSTANCE prevInstance,PSTR pStr ,int
 		ImGui_ImplWin32_NewFrame();
 
 		ImGui::NewFrame();
-		ViewMatrix_t vm = mem.Read<ViewMatrix_t>(client + offsets::client::dwViewMatrix);
-		LocalPlayer lp = LocalPlayer(mem);
+		interfaces::vm = interfaces::mem.Read<ViewMatrix_t>(interfaces::client + offsets::client::dwViewMatrix);
+		LocalPlayer lp = LocalPlayer();
 
 		for (int i = 0; i <= 32; i++) {
-			CPlayer player = CPlayer(i,mem);
+			CPlayer player = CPlayer(i);
 
 			if (player.m_iHealth() <= 0)
 				continue;
 
-			if (player.m_iTeamNum() != lp.m_iTeamNum())
+			if (player.m_iTeamNum() == lp.m_iTeamNum())
 				continue;
 
 			if (!player.Valid())
 				continue;
 
-			Vector_t FeetPos = player.m_VecOrigin().W2S(vm);
-			Vector_t HeadPos = (player.Bone_Origin(6) + Vector_t(0.f, 0.f, 5.f)).W2S(vm);
+			if (player.Entity() == lp.Entity())
+				continue;
+
+			if (!interfaces::mem.IsMainWindow())
+				continue;
+
+			Vector_t FeetPos = player.m_VecOrigin().W2S(interfaces::vm);
+			Vector_t HeadPos = (player.Bone_Origin(6) + Vector_t(0.f, 0.f, 7.f)).W2S(interfaces::vm);
 
 			if (FeetPos.z <= 0.001f)
 				continue;
 
 			float height = HeadPos.y - FeetPos.y;
-			float width =  height * 0.3f;
+			float width =  height * 0.25f;
 
 			ImGui::GetBackgroundDrawList()->AddRect(
 				ImVec2(FeetPos.x - (int)width, FeetPos.y),
 				ImVec2(HeadPos.x + (int)width, HeadPos.y ),
 				ImColor(255, 255, 255)
 			);
+			
 		}
 		
 		//Render
