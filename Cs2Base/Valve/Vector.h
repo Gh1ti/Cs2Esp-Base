@@ -35,8 +35,8 @@ public:
 		_x *= inv_w;
 		_y *= inv_w;
 
-		float x = 1920 * .5f;
-		float y = 1080 * .5f;
+		float x = GetSystemMetrics(SM_CXFULLSCREEN) * .5f;
+		float y = GetSystemMetrics(SM_CYFULLSCREEN) * .5f;
 
 		x += 0.5f * _x * 1920 + 0.5f;
 		y -= 0.5f * _y * 1080 + 0.5f;
