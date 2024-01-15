@@ -152,11 +152,11 @@
     <ClInclude Include="ImGui\imstb_rectpack.h" />
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
-    <ClInclude Include="Valve\CPlayer.h" />
-    <ClInclude Include="Valve\Memory.h" />
-    <ClInclude Include="Valve\Offsets.h" />
-    <ClInclude Include="Valve\Precompiled.h" />
-    <ClInclude Include="Valve\Vector.h" />
+    <ClInclude Include="Valve\CPlayer.hpp" />
+    <ClInclude Include="Valve\Memory.hpp" />
+    <ClInclude Include="Valve\Offsets.hpp" />
+    <ClInclude Include="Valve\Precompiled.hpp" />
+    <ClInclude Include="Valve\Vector.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

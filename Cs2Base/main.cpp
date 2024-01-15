@@ -2,12 +2,13 @@
 #include <Windows.h>
 #include <d3d11.h>
 #include <dwmapi.h>
+#include <string>
 
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_dx11.h"
 #include "ImGui/imgui_impl_win32.h"
 
-#include "Valve/Precompiled.h"
+#include "Valve/Precompiled.hpp"
 
 #pragma comment(lib,"d3d11.lib")
 
@@ -137,7 +138,7 @@ INT APIENTRY WinMain(HINSTANCE hInstance , HINSTANCE prevInstance,PSTR pStr ,int
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 
-			if (msg.message == WM_QUIT || interfaces::mem.GetProcessId() == 0) {
+			if (msg.message == WM_QUIT || !interfaces::mem.GetProcessId()) {
 				running = false;
 			}
 			if (!running)
@@ -150,41 +151,43 @@ INT APIENTRY WinMain(HINSTANCE hInstance , HINSTANCE prevInstance,PSTR pStr ,int
 
 		ImGui::NewFrame();
 		interfaces::vm = interfaces::mem.Read<ViewMatrix_t>(interfaces::client + offsets::client::dwViewMatrix);
-		LocalPlayer lp = LocalPlayer();
 
 		for (int i = 0; i <= 32; i++) {
-			CPlayer player = CPlayer(i);
-
-			if (player.m_iHealth() <= 0)
+			CPlayer* player = new CPlayer(i);
+			LocalPlayer* lp = new LocalPlayer();
+			if (player->GetHealth() <= 0)
 				continue;
 
-			if (player.m_iTeamNum() == lp.m_iTeamNum())
+			if (player->GetTeam() == lp->GetTeam())
 				continue;
 
-			if (!player.Valid())
+			if (!player->IsValid())
 				continue;
 
-			if (player.Entity() == lp.Entity())
+			if (player->Entity() == lp->Entity())
 				continue;
 
 			if (!interfaces::mem.IsMainWindow())
 				continue;
 
-			Vector_t FeetPos = player.m_VecOrigin().W2S(interfaces::vm);
-			Vector_t HeadPos = (player.Bone_Origin(6) + Vector_t(0.f, 0.f, 7.f)).W2S(interfaces::vm);
+			Vector_t FeetPos = (player->GetOrigin() - Vector_t(0, 0, 4.f)).W2S(interfaces::vm);
+			Vector_t HeadPos = (player->BoneOrigin(6) + Vector_t(0.f, 0.f, 2.f)).W2S(interfaces::vm);
+
+			delete[] player;
+			delete[] lp;
 
 			if (FeetPos.z <= 0.001f)
 				continue;
 
 			float height = HeadPos.y - FeetPos.y;
-			float width =  height * 0.25f;
+			float width =  height * 0.3f;
 
 			ImGui::GetBackgroundDrawList()->AddRect(
 				ImVec2(FeetPos.x - (int)width, FeetPos.y),
 				ImVec2(HeadPos.x + (int)width, HeadPos.y ),
 				ImColor(255, 255, 255)
 			);
-			
+
 		}
 		
 		//Render

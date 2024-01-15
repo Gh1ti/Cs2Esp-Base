@@ -65,19 +65,19 @@
     <ClInclude Include="ImGui\imstb_truetype.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Valve\Vector.h">
+    <ClInclude Include="Valve\Vector.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Valve\Memory.h">
+    <ClInclude Include="Valve\Memory.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Valve\CPlayer.h">
+    <ClInclude Include="Valve\CPlayer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Valve\Precompiled.h">
+    <ClInclude Include="Valve\Precompiled.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Valve\Offsets.h">
+    <ClInclude Include="Valve\Offsets.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
