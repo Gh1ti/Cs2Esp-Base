@@ -21,6 +21,7 @@ LRESULT CALLBACK WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam,LPARAM lPara
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
+float fov = 10;
 
 INT APIENTRY WinMain(HINSTANCE hInstance , HINSTANCE prevInstance,PSTR pStr ,int cmdShow) {
 	WNDCLASSEXW wc{};
@@ -151,7 +152,9 @@ INT APIENTRY WinMain(HINSTANCE hInstance , HINSTANCE prevInstance,PSTR pStr ,int
 
 		ImGui::NewFrame();
 		interfaces::vm = interfaces::mem.Read<ViewMatrix_t>(interfaces::client + offsets::client::dwViewMatrix);
-
+		DWORD64 Local_Idx;
+		ImVec2 screen = ImGui::GetIO().DisplaySize;
+		Vector_t screen_center = Vector_t(screen.x / 2, screen.y / 2,0);
 		for (int i = 0; i <= 32; i++) {
 			CPlayer* player = new CPlayer(i);
 			LocalPlayer* lp = new LocalPlayer();
@@ -164,14 +167,27 @@ INT APIENTRY WinMain(HINSTANCE hInstance , HINSTANCE prevInstance,PSTR pStr ,int
 			if (!player->IsValid())
 				continue;
 
-			if (player->Entity() == lp->Entity())
+			if (player->Entity() == lp->Entity()) {
+				Local_Idx = i;
 				continue;
+			}
 
 			if (!interfaces::mem.IsMainWindow())
 				continue;
 
-			Vector_t FeetPos = (player->GetOrigin() - Vector_t(0, 0, 4.f)).W2S(interfaces::vm);
-			Vector_t HeadPos = (player->BoneOrigin(6) + Vector_t(0.f, 0.f, 2.f)).W2S(interfaces::vm);
+			Vector_t FeetPos = (player->GetOrigin()).W2S(interfaces::vm);
+			Vector_t HeadPos = (player->BoneOrigin(6)).W2S(interfaces::vm);
+			if (GetAsyncKeyState(VK_LMENU)) {
+				if (HeadPos.Dist(screen_center) <= fov) {
+					bool spotted = lp->SpotedState() & (1 << i) || player->SpotedState() & (1 << Local_Idx);
+					if (spotted) {
+						mouse_event(MOUSEEVENTF_MOVE,
+							(HeadPos.x - screen_center.x) / 5,
+							(HeadPos.y - screen_center.y) / 5,
+							0, 0);
+					}	
+				}					
+			}
 
 			delete[] player;
 			delete[] lp;

@@ -3,10 +3,12 @@
 
 namespace offsets {
 	namespace client {
-		constexpr std::ptrdiff_t dwEntityList = 0x17C1950;
-		constexpr std::ptrdiff_t dwLocalPlayerController = 0x1810F48;
-        constexpr std::ptrdiff_t dwLocalPlayerPawn = 0x16C8F58;
-		constexpr std::ptrdiff_t dwViewMatrix = 0x1820150;
+		constexpr std::ptrdiff_t dwEntityList = 0x17CE6A0;
+		constexpr std::ptrdiff_t dwLocalPlayerController = 0x181DC98;
+        constexpr std::ptrdiff_t dwLocalPlayerPawn = 0x16D4F48;
+		constexpr std::ptrdiff_t dwViewMatrix = 0x182CEA0;
+		constexpr std::ptrdiff_t m_entitySpottedState = 0x1638;
+		constexpr std::ptrdiff_t m_bSpottedByMask = 0xC;
 		constexpr std::ptrdiff_t m_hPlayerPawn = 0x7EC;
 		constexpr std::ptrdiff_t m_iHealth = 0x32C;
 		constexpr std::ptrdiff_t m_iTeamNum = 0x3BF;

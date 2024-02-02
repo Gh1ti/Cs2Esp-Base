@@ -19,5 +19,3 @@ namespace interfaces {
 
 
 #include "CPlayer.hpp"
-
-

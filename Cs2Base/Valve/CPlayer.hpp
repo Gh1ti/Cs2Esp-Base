@@ -11,11 +11,9 @@ public:
 		list_entry2 = interfaces::mem.Read<uintptr_t>(interfaces::entity_list + (0x8 * (index & 0x7FFF) >> 9) + 16);
 		pCSPlayerPawn = interfaces::mem.Read<uintptr_t>(list_entry2 + 120 * (playerPawn & 0x1FF));
 	}
-
 	int GetIndex() {
 		return this->index;
 	}
-
 	int GetTeam() {
 		return interfaces::mem.Read<int>(player + offsets::client::m_iTeamNum);
 	}
@@ -36,6 +34,9 @@ public:
 	}
 	uintptr_t Entity() {
 		return this->player;
+	}
+	uintptr_t SpotedState() {
+		return interfaces::mem.Read<uintptr_t>(pCSPlayerPawn + offsets::client::m_entitySpottedState + offsets::client::m_bSpottedByMask);
 	}
 private:
 	uintptr_t list_entry;
@@ -63,6 +64,9 @@ public:
 
 	uintptr_t Entity() {
 		return this->player;
+	}
+	uintptr_t SpotedState() {
+		return interfaces::mem.Read<uintptr_t>(pCSPlayerPawn + offsets::client::m_entitySpottedState + offsets::client::m_bSpottedByMask);
 	}
 private:
 	uintptr_t player;

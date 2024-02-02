@@ -1,4 +1,5 @@
 #pragma once
+#include <cmath>
 #include "Precompiled.hpp"
 
 struct ViewMatrix_t {
@@ -26,6 +27,18 @@ public:
 		return{ x - other.x,y - other.y,z - other.z };
 	}
 
+	bool operator < (const Vector_t& other) {
+		return (x < other.x && y < other.y && z < other.x);
+	}
+
+	bool operator > (const Vector_t& other) {
+		return (x > other.x && y > other.y && z > other.x);
+	}
+
+	bool operator == (const Vector_t& other) {
+		return (x == other.x && y == other.y && z == other.x);
+	}
+
 	const Vector_t W2S(ViewMatrix_t vm) const {
 		float _x = vm[0][0] * x + vm[0][1] * y + vm[0][2] * z + vm[0][3];
 		float _y = vm[1][0] * x + vm[1][1] * y + vm[1][2] * z + vm[1][3];
@@ -41,6 +54,21 @@ public:
 		x += 0.5f * _x * GetSystemMetrics(SM_CXFULLSCREEN) + 0.5f;
 		y -= 0.5f * _y * GetSystemMetrics(SM_CYFULLSCREEN) + 0.5f;
 		return Vector_t(x, y, w);
+	}
+
+	float Dist(Vector_t other) {
+		return std::sqrt(std::pow(other.x - x, 2) + std::pow(other.y - y, 2));
+	};
+
+	bool is_lowest(Vector_t* array) {
+		int size = sizeof(array) / sizeof(Vector_t*);
+		Vector_t current_lowest = (x,y,z);
+		for (int i = 0; i < size; i++) {
+			if (array[i] < current_lowest) {
+				current_lowest = array[i];
+			}
+		}
+		return current_lowest == (x, y, z);
 	}
 
 };
